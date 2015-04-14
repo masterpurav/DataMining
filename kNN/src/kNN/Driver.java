@@ -21,7 +21,6 @@ public class Driver {
 		/*
 		 * 1. Read training data, create the data structures
 		 */
-		
 		String line;
 		ArrayList<Recipe> everything = new ArrayList<Recipe>();
 		FileReader f = new FileReader("src/kNN/training-data.txt");
@@ -48,7 +47,9 @@ public class Driver {
 		
 		FileReader test = new FileReader("src/kNN/testing-data-small.txt");
 		BufferedReader testReader = new BufferedReader(test);
-		HashMap weights = WeighIngridients.run(f);
+		ArrayList<HashMap> weights = WeighIngridients.run(f);
+		HashMap<String,Integer> w = weights.get(0);
+		HashMap<String,Integer> freq = weights.get(1);
 		while((line = testReader.readLine())!=null){
 			String[] str = line.split(" ");
 			HashSet<String> ingr = new HashSet<String>();
@@ -62,41 +63,38 @@ public class Driver {
 			 * Calculate distance
 			 */
 			
-			closest = r.createDistanceArray(everything,weights);
+			closest = r.createDistanceArray(everything,w,freq);
 			
 			
 			/*
 			 * 4. Voting
 			 */
-			int k = 12;
+			int k = 20;
 			Collections.sort(closest);
 			java.util.Iterator<cdTuple> iter = closest.iterator();
-			//System.out.println("New Recipe:");
-			HashMap<Integer, Integer> hm = new HashMap<Integer,Integer>();
+			HashMap<Integer, Float> hm = new HashMap<Integer,Float>();
 			for(int c = 0 ; c < k ; c++){
 				Recipe.cdTuple x = iter.next();
 				if(!hm.containsKey(x.cuisine))
-					hm.put(x.cuisine, 1);
+					hm.put(x.cuisine, 1-x.dist);
 				else
-					hm.put(x.cuisine,hm.get(x.cuisine)+1);
+					hm.put(x.cuisine,hm.get(x.cuisine)+1-x.dist);
 			}
-			Entry<Integer,Integer> max = null;
-			java.util.Iterator<Entry<Integer, Integer>> hmiter = hm.entrySet().iterator();
+			Entry<Integer,Float> max = null;
+			java.util.Iterator<Entry<Integer, Float>> hmiter = hm.entrySet().iterator();
 			
 			while (hmiter.hasNext()){
-				Entry<Integer,Integer> p = hmiter.next();
+				Entry<Integer,Float> p = hmiter.next();
 				if (max == null || p.getValue() > max.getValue())
 					max = p;
 			}
 			System.out.println(max.getKey());
 		}
-		CrossValidation.validate(everything, 10, weights);
+		CrossValidation.validate(everything, 10, w,freq);
 		long end = System.currentTimeMillis()/1000;
 		
 		System.out.println("Time taken : "+ (float)(end - start)/(float)60);
 		}
-		//testReader.close();	
-		
 	}
 
 

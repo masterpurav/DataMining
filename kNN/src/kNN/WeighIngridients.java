@@ -15,13 +15,14 @@ import java.util.StringTokenizer;
 
 public class WeighIngridients {
 	
-    public static HashMap<String,Integer> run(FileReader fr) throws IOException{
+    public static ArrayList<HashMap> run(FileReader fr) throws IOException{
     	System.out.println("Calculation of weights of ingridients started");
     	FileReader f1r = new FileReader("src/kNN/training-data.txt");
     	BufferedReader br = new BufferedReader(f1r);
     	String line;
     	HashSet<String> ingr = new HashSet<String>();
     	HashMap<String,ArrayList<Integer>> hm = new HashMap<String,ArrayList<Integer>>();
+    	HashMap<String,Integer> freqDist = new HashMap<String,Integer>();
     	HashMap<Integer,Integer> cuisineDistr = new HashMap<Integer,Integer>();
     	while((line = br.readLine()) != null){
     		String str[] = line.split(" ");
@@ -33,12 +34,14 @@ public class WeighIngridients {
     		for(int i = 1 ; i < str.length ; i++){
     			ingr.add(str[i]);
     			if(hm.containsKey(str[i])){
+    				freqDist.put(str[i], freqDist.get(str[i])+1);
     				ArrayList<Integer> a = hm.get(str[i]);
     				int x = a.get(index);
     				a.set(index, x+1);
         			hm.put(str[i],a);
         		}
         		else{
+        			freqDist.put(str[i], 1);
         			ArrayList<Integer> a = new ArrayList<Integer>();
         			for (int j = 0 ; j < 7 ; j++)
         				a.add(0);
@@ -68,7 +71,12 @@ public class WeighIngridients {
     		ingrWeights.put(p.getKey(), count);
     	}
     	System.out.println("Calculation of weights of ingridients completed.");
-    	Iterator i = ingrWeights.entrySet().iterator();
-    	return ingrWeights;
+    	Iterator i = freqDist.entrySet().iterator();
+    	while(i.hasNext())
+    		System.out.println(i.next());
+    	ArrayList<HashMap> al = new ArrayList<HashMap>();
+    	al.add(ingrWeights);
+    	al.add(freqDist);
+    	return al;
     }	
 }

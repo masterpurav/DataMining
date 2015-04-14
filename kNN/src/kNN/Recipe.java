@@ -42,7 +42,7 @@ public class Recipe {
 		}
 	}
 	
-	public float calculateDistance(Recipe p,HashMap<String,Integer> hm){
+	public float calculateDistance(Recipe p,HashMap<String,Integer> hm, HashMap<String,Integer> f){
 		java.util.Iterator<Entry<String, Integer>> i = hm.entrySet().iterator();
 		HashSet<String> union = new HashSet<String>(this.ingridients);
 		HashSet<String> intersection = new HashSet<String>(this.ingridients);
@@ -51,20 +51,22 @@ public class Recipe {
 		int unionWeight = 0;
 		int intersectionWeight = 0;
 		for (String s : union){ 
-				unionWeight+=hm.get(s);
+			if (f.get(s) > 30)
+				unionWeight+=(hm.get(s));
 		}
 		for (String s : intersection){
-				intersectionWeight += hm.get(s);
+			if (f.get(s) > 30)
+				intersectionWeight += (hm.get(s));
 		}
 		return 1-((float)intersectionWeight/(float)unionWeight);
 	}
 	
-	public ArrayList<cdTuple> createDistanceArray(ArrayList<Recipe> a,HashMap<String,Integer> hm){
+	public ArrayList<cdTuple> createDistanceArray(ArrayList<Recipe> a,HashMap<String,Integer> hm,HashMap<String,Integer> f){
 		ArrayList<cdTuple> tuples = new ArrayList<cdTuple>();
 		java.util.Iterator<Recipe> i = a.iterator();
 		while(i.hasNext()){
 			Recipe r = i.next();
-			tuples.add(new cdTuple(r.cuisine,r.calculateDistance(this,hm)));
+			tuples.add(new cdTuple(r.cuisine,r.calculateDistance(this,hm,f)));
 		}
 		return tuples;
 	}

@@ -9,7 +9,7 @@ import kNN.Recipe.cdTuple;
 
 public class CrossValidation {
 	
-	public static void validate(ArrayList<Recipe> a,int folds,HashMap<String,Integer> weights){
+	public static void validate(ArrayList<Recipe> a,int folds,HashMap<String,Integer> weights,HashMap<String,Integer> f){
 		int[][] confusionMatrix = new int[7][7];
 		System.out.println(a.size());
 		int foldSize = a.size()/folds;
@@ -27,7 +27,7 @@ public class CrossValidation {
 				for(int j = 0 ; j < a.size() ; j++){
 					if(j<foldMin || j>foldMax){
 						Recipe trained = a.get(j);
-						distances.add(new Recipe.cdTuple(trained.cuisine,trained.calculateDistance(test,weights)));
+						distances.add(new Recipe.cdTuple(trained.cuisine,trained.calculateDistance(test,weights,f)));
 					}
 					
 				}
