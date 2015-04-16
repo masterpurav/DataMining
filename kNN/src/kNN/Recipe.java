@@ -13,6 +13,16 @@ public class Recipe {
 	
 	public Recipe(){}
 	
+	public String toString(){
+		StringBuffer str = null;
+		str.append(this.cuisine+"\n");
+		java.util.Iterator<String> it = this.ingridients.iterator();
+		while (it.hasNext())
+			str.append(it.next()+" ");
+		String r = new String(str);
+		return r;
+	}
+	
 	public Recipe(int cuisine, HashSet<String> ingridients){
 		this.cuisine = cuisine;
 		this.ingridients = ingridients;
@@ -48,15 +58,19 @@ public class Recipe {
 		HashSet<String> intersection = new HashSet<String>(this.ingridients);
 		union.addAll(p.ingridients);
 		intersection.retainAll(p.ingridients);
-		int unionWeight = 0;
-		int intersectionWeight = 0;
+		float unionWeight = 0;
+		float intersectionWeight = 0;
 		for (String s : union){ 
-			if (f.get(s) > 30)
-				unionWeight+=(hm.get(s));
+			if (f.get(s) > 25){
+				unionWeight+=((float)hm.get(s)/(float)6);
+				//unionWeight++;
+			}
 		}
 		for (String s : intersection){
-			if (f.get(s) > 30)
-				intersectionWeight += (hm.get(s));
+			if (f.get(s) > 25){
+				intersectionWeight += ((float)hm.get(s)/(float)6);
+				//intersectionWeight ++;
+				}
 		}
 		return 1-((float)intersectionWeight/(float)unionWeight);
 	}

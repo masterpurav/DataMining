@@ -71,9 +71,10 @@ public class WeighIngridients {
     		ingrWeights.put(p.getKey(), count);
     	}
     	System.out.println("Calculation of weights of ingridients completed.");
-    	Iterator i = freqDist.entrySet().iterator();
-    	while(i.hasNext())
+    	Iterator i = ingrWeights.entrySet().iterator();
+    	while(i.hasNext()){
     		System.out.println(i.next());
+    	}
     	ArrayList<HashMap> al = new ArrayList<HashMap>();
     	al.add(ingrWeights);
     	al.add(freqDist);

@@ -3,6 +3,7 @@ package kNN;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 
 import kNN.Recipe.cdTuple;
@@ -32,30 +33,47 @@ public class CrossValidation {
 					
 				}
 				/* Predict and compare */
-				int k = 9;
+				int k = 8 ;
 				Collections.sort(distances);
+				StringBuffer sb = new StringBuffer();
+				float maxDist = distances.get(k-1).dist;
+				float minDist = distances.get(0).dist;
 				java.util.Iterator<cdTuple> iter = distances.iterator();
-				HashMap<Integer, Integer> hm = new HashMap<Integer,Integer>();
+				HashMap<Integer, Float> hm = new HashMap<Integer,Float>();
+				HashMap<Integer, Integer> hm2 = new HashMap<Integer,Integer>();
+				
 				for(int p = 0 ; p < k ; p++){
 					Recipe.cdTuple x = iter.next();
-					if(!hm.containsKey(x.cuisine))
-						hm.put(x.cuisine, 1);
-					else
-						hm.put(x.cuisine,hm.get(x.cuisine)+1);
+					if(!hm.containsKey(x.cuisine)){
+						hm.put(x.cuisine, (maxDist - x.dist)/(maxDist - minDist));
+						hm2.put(x.cuisine,1);
+					}
+					else{
+						hm.put(x.cuisine,hm.get(x.cuisine)+(maxDist - x.dist)/(maxDist - minDist));
+						hm2.put(x.cuisine,hm2.get(x.cuisine)+1);
+					}
+					sb.append(x.cuisine+" "+x.dist+"\n");
 				}
-				Entry<Integer,Integer> max = null;
-				java.util.Iterator<Entry<Integer, Integer>> hmiter = hm.entrySet().iterator();
-				
+				Entry<Integer, Float> max = null;
+				HashMap<Integer,Float> hm3 = new HashMap<Integer,Float>();
+				Iterator<Entry<Integer, Integer>> it = hm2.entrySet().iterator();
+				while (it.hasNext()){
+					Entry<Integer,Integer> p = it.next();
+					hm3.put(p.getKey(), p.getValue()*hm.get(p.getKey()));
+				}
+				java.util.Iterator<Entry<Integer, Float>> hmiter = hm3.entrySet().iterator();
 				while (hmiter.hasNext()){
-					Entry<Integer,Integer> p = hmiter.next();
+					Entry<Integer,Float> p = hmiter.next();
 					if (max == null || p.getValue() > max.getValue())
 						max = p;
 				}
 				int predicted = max.getKey();
 				count++;
 				if(predicted != a.get(c).cuisine){
-					System.out.println(count+"/ "+"Predicted : "+predicted+" Actual : "+a.get(c).cuisine + "\t"+(1- (float)wrong/(float)count));
 					wrong++;
+					System.out.println(count+"/ "+"Predicted : "+predicted+" Actual : "+a.get(c).cuisine + "\t"+(1- (float)wrong/(float)count));
+					System.out.println(sb);
+					System.out.println("****");
 				}
 				confusionMatrix[predicted-1][a.get(c).cuisine-1]++;
 			}

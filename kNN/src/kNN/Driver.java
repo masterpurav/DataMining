@@ -15,6 +15,7 @@ import kNN.Recipe.cdTuple;
 
 public class Driver {
 	
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		long start = System.currentTimeMillis()/1000;
