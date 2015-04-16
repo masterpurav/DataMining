@@ -62,14 +62,23 @@ public class Recipe {
 		float intersectionWeight = 0;
 		for (String s : union){ 
 			if (f.get(s) > 25){
+				try{
 				unionWeight+=((float)hm.get(s)/(float)6);
 				//unionWeight++;
+				}
+				catch (Exception e){
+					unionWeight+=(1/(float)6);
+				}
 			}
 		}
 		for (String s : intersection){
 			if (f.get(s) > 25){
-				intersectionWeight += ((float)hm.get(s)/(float)6);
-				//intersectionWeight ++;
+				try{
+					intersectionWeight += ((float)hm.get(s)/(float)6);
+				}
+				catch (Exception e){
+					intersectionWeight += (1/(float)6);
+				}//intersectionWeight ++;
 				}
 		}
 		return 1-((float)intersectionWeight/(float)unionWeight);
