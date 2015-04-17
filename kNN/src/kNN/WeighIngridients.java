@@ -16,7 +16,7 @@ import java.util.StringTokenizer;
 public class WeighIngridients {
 	
     public static ArrayList<HashMap> run(FileReader fr) throws IOException{
-    	System.out.println("Calculation of weights of ingridients started");
+    	//System.out.println("Calculation of weights of ingridients started");
     	FileReader f1r = new FileReader("src/kNN/training-data.txt");
     	BufferedReader br = new BufferedReader(f1r);
     	String line;
@@ -70,11 +70,7 @@ public class WeighIngridients {
     		}
     		ingrWeights.put(p.getKey(), count);
     	}
-    	System.out.println("Calculation of weights of ingridients completed.");
-    	Iterator i = ingrWeights.entrySet().iterator();
-    	while(i.hasNext()){
-    		System.out.println(i.next());
-    	}
+    	//System.out.println("Calculation of weights of ingridients completed.");
     	ArrayList<HashMap> al = new ArrayList<HashMap>();
     	al.add(ingrWeights);
     	al.add(freqDist);

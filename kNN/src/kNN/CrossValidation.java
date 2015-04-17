@@ -33,7 +33,7 @@ public class CrossValidation {
 					
 				}
 				/* Predict and compare */
-				int k = 8 ;
+				int k = 9 ;
 				Collections.sort(distances);
 				StringBuffer sb = new StringBuffer();
 				float maxDist = distances.get(k-1).dist;
